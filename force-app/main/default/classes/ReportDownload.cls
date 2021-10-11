@@ -44,7 +44,9 @@ public with sharing class ReportDownload {
        if(Schema.sObjectType.Case.isAccessible() && Schema.sObjectType.Case.fields.Subject.isAccessible() && Schema.sObjectType.Case.fields.Description.isAccessible()&& Schema.sObjectType.Case.fields.Status.isAccessible() && Schema.sObjectType.Case.fields.Priority.isAccessible() && Schema.sObjectType.Case.fields.CaseNumber.isAccessible() && Schema.sObjectType.User.fields.Name.isAccessible()){
            if (Schema.sObjectType.CaseComment.isAccessible()){
               
-           		//cas = [Select (Select Id, ParentId, IsPublished, CommentBody, CreatedById, CreatedDate, SystemModstamp, LastModifiedDate, LastModifiedById, IsDeleted From CaseComments) Id, Subject, Description, CaseNumber, SuppliedName, Priority, Status from Case where parentId = :Record.Id ORDER BY Priority ASC NULLS LAST];
+
+           	cas = [Select (Select Id, ParentId, IsPublished, CommentBody, CreatedById, CreatedDate, SystemModstamp, LastModifiedDate, LastModifiedById, IsDeleted From CaseComments) Id, Subject, Description, CaseNumber, SuppliedName, Priority, Status from Case where parentId = :Record.Id ORDER BY Priority ASC NULLS LAST];
+
 
                
            }
