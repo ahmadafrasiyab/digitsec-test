@@ -1,10 +1,10 @@
-global with sharing class AuditAccessControl {
+global without sharing class AuditAccessControl {
     public Integer NumberofUsers{get; set;}
     public Integer NumberofProfiles{get; set;}
     public Integer NumberofRoles{get; set;}
     public Integer NumberofPermissionSets{get; set;}
-    public String dotPrefix {get; set;} 
-    public List<User> ActiveUsers; 
+    public String dotPrefix {get; set;}
+    public List<User> ActiveUsers;
     private static final String PERMISSIONS = 'permissions';
     private static final String CREATE = 'permissionscreate';
     private static final String READ = 'permissionsread';
