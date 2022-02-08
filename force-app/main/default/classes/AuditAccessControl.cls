@@ -1,6 +1,3 @@
-
-
-
 global with sharing class AuditAccessControl {
 
     public Integer NumberofUsers{get; set;}
