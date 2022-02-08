@@ -1,7 +1,7 @@
 
 
 
-global with sharing class AuditAccessControl {
+global without sharing class AuditAccessControl {
 
     public Integer NumberofUsers{get; set;}
     public Integer NumberofProfiles{get; set;}
