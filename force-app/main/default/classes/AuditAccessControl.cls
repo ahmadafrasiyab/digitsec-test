@@ -102,6 +102,24 @@ global without sharing class AuditAccessControl {
             (Select Id, ParentId, SobjectType, PermissionsCreate, PermissionsRead, PermissionsEdit, PermissionsDelete, PermissionsViewAllRecords, PermissionsModifyAllRecords, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp From ObjectPerms Where SobjectType in :objectfilter), 
             (Select Id, ParentId, SobjectType, Field, PermissionsEdit, PermissionsRead, SystemModstamp From FieldPerms Where SobjectType in :objectfilter) From PermissionSet p Where p.Id in :permId];
         }
+        return [Select p.ProfileId, p.PermissionsViewEncryptedData, p.PermissionsViewAllUsers, p.PermissionsViewAllData, p.PermissionsManageUsers, p.PermissionsManageUnlistedGroups, 
+            (Select Id, IsDeleted, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp, AuthSessionId, PermissionSetId, UserId, Description From SessionActivations), 
+            (Select Id, PermissionSetId, AssigneeId, SystemModstamp From Assignments where AssigneeId in :userfilter), 
+            (Select Id, ParentId, SobjectType, PermissionsCreate, PermissionsRead, PermissionsEdit, PermissionsDelete, PermissionsViewAllRecords, PermissionsModifyAllRecords, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp From ObjectPerms Where SobjectType in :objectfilter), 
+            (Select Id, ParentId, SobjectType, Field, PermissionsEdit, PermissionsRead, SystemModstamp From FieldPerms Where SobjectType in :objectfilter) From PermissionSet p Where p.Id in :permId];
+
+        return [Select p.ProfileId, p.Profile.Name, p.PermissionsViewEncryptedData, p.PermissionsViewAllUsers, p.PermissionsViewAllData, p.PermissionsManageUsers, p.PermissionsManageUnlistedGroups, 
+            (Select Id, IsDeleted, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp, AuthSessionId, PermissionSetId, UserId, Description From SessionActivations), 
+            (Select Id, PermissionSetId, AssigneeId, SystemModstamp From Assignments where AssigneeId in :userfilter), 
+            (Select Id, ParentId,PermissionsCreate, PermissionsRead, PermissionsEdit, PermissionsDelete, PermissionsViewAllRecords, PermissionsModifyAllRecords, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp From ObjectPerms Where SobjectType in :objectfilter), 
+            (Select Id, ParentId, SobjectType, Field, PermissionsEdit, PermissionsRead, SystemModstamp From FieldPerms Where SobjectType in :objectfilter) From PermissionSet p Where p.Id in :permId];
+
+        return [Select p.ProfileId, p.Profile.Name, p.PermissionsViewEncryptedData, p.PermissionsViewAllUsers, p.PermissionsViewAllData, p.PermissionsManageUsers, p.PermissionsManageUnlistedGroups, 
+            (Select Id, IsDeleted, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp, AuthSessionId, PermissionSetId, UserId, Description From SessionActivations), 
+            (Select Id, PermissionSetId, AssigneeId, SystemModstamp From Assignments where AssigneeId in :userfilter), 
+            (Select Id, ParentId, PermissionsCreate, PermissionsRead, PermissionsEdit, PermissionsDelete, PermissionsViewAllRecords, PermissionsModifyAllRecords, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp From ObjectPerms Where SobjectType in :objectfilter), 
+            (Select Id, ParentId, SobjectType, Field, PermissionsEdit, PermissionsRead, SystemModstamp From FieldPerms Where SobjectType in :objectfilter) From PermissionSet p Where p.Id in :permId];
+
         
         // deleted the block 
     }
