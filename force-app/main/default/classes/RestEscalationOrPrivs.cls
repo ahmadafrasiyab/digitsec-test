@@ -1,5 +1,5 @@
 @RestResource(urlMapping='/user_defined_type_example/*')
-//hello    
+//hello     
 global without sharing class RestEscalationOrPrivs {
 
     @HttpPost
