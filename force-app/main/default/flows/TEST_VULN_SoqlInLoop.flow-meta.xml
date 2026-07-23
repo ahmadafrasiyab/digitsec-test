@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <label>TEST VULN - SOQL In Loop</label>
+    <processType>AutoLaunchedFlow</processType>
+    <status>Active</status>
+    <interviewLabel>TEST VULN - SOQL In Loop {!$Flow.CurrentDateTime}</interviewLabel>
+
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Get_Opportunities</targetReference>
+        </connector>
+        <object>Account</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+
+    <recordLookups>
+        <name>Get_Opportunities</name>
+        <label>Get Opportunities</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <connector>
+            <targetReference>Loop_Opportunities</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Opportunity</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+
+    <!-- VULNERABILITY (SFDC_FLOW_SOQL_IN_LOOP): -->
+    <!-- this second Get Records element fires once PER ITERATION of the loop -->
+    <!-- below (see loop's nextValueConnector), instead of querying all needed -->
+    <!-- OpportunityLineItems once outside the loop. This risks hitting the -->
+    <!-- 100 SOQL queries per transaction governor limit on any account with -->
+    <!-- more than 100 opportunities. -->
+    <recordLookups>
+        <name>Get_Line_Items_In_Loop</name>
+        <label>Get Line Items In Loop</label>
+        <locationX>176</locationX>
+        <locationY>374</locationY>
+        <connector>
+            <targetReference>Loop_Opportunities</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>OpportunityId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Loop_Opportunities.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>OpportunityLineItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+
+    <loops>
+        <name>Loop_Opportunities</name>
+        <label>Loop Opportunities</label>
+        <locationX>176</locationX>
+        <locationY>266</locationY>
+        <collectionReference>Get_Opportunities</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Get_Line_Items_In_Loop</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>End_Screen_Noop</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+
+    <recordUpdates>
+        <name>End_Screen_Noop</name>
+        <label>End Noop</label>
+        <locationX>176</locationX>
+        <locationY>482</locationY>
+        <inputAssignments>
+            <field>Id</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Account</object>
+    </recordUpdates>
+</Flow>

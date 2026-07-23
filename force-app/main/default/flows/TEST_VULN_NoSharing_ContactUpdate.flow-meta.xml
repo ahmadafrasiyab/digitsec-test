@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <label>TEST VULN - No Sharing Contact Update</label>
+    <processType>AutoLaunchedFlow</processType>
+    <status>Active</status>
+    <interviewLabel>TEST VULN - No Sharing Contact Update {!$Flow.CurrentDateTime}</interviewLabel>
+
+    <!-- VULNERABILITY: runInMode is SystemModeWithoutSharing -->
+    <!-- This ignores org-wide defaults, sharing rules, AND field-level security. -->
+    <!-- A scanner should flag any DML/query flow set to bypass sharing, especially -->
+    <!-- one triggered by a record change that a lower-privileged user can cause. -->
+    <runInMode>SystemModeWithoutSharing</runInMode>
+
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Get_All_Related_Contacts</targetReference>
+        </connector>
+        <object>Case</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+
+    <!-- VULNERABILITY: unfiltered/broad Get Records on a sensitive object (Contact = PII) -->
+    <!-- pulled purely by AccountId with no owner/team/record-type restriction -->
+    <recordLookups>
+        <name>Get_All_Related_Contacts</name>
+        <label>Get All Related Contacts</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <connector>
+            <targetReference>Update_Contacts_No_FLS_Check</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.AccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+
+    <!-- VULNERABILITY: bulk Update DML with no prior check that the running user -->
+    <!-- (irrelevant here since it's System mode) or the triggering user has edit -->
+    <!-- access to the fields being written. No field-level security enforcement. -->
+    <recordUpdates>
+        <name>Update_Contacts_No_FLS_Check</name>
+        <label>Update Contacts No FLS Check</label>
+        <locationX>176</locationX>
+        <locationY>266</locationY>
+        <inputReference>Get_All_Related_Contacts</inputReference>
+    </recordUpdates>
+</Flow>

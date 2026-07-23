@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <label>TEST VULN - Get Record All Fields</label>
+    <processType>AutoLaunchedFlow</processType>
+    <status>Active</status>
+    <interviewLabel>TEST VULN - Get Record All Fields {!$Flow.CurrentDateTime}</interviewLabel>
+
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Get_Account_All_Fields</targetReference>
+        </connector>
+        <object>Opportunity</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+
+    <!-- VULNERABILITY (SFDC_FLOW_GET_RECORD_ALL_FIELDS): -->
+    <!-- storeOutputAutomatically=true means "Automatically store all fields" -->
+    <!-- was selected in the UI, instead of "Choose fields and let Salesforce -->
+    <!-- do the rest" / manual field selection. This over-fetches every field -->
+    <!-- on the object (including ones the flow never uses), which: -->
+    <!--   - increases risk of exposing sensitive/restricted fields downstream -->
+    <!--   - bypasses the intent of least-privilege field access -->
+    <!--   - adds unnecessary heap/performance overhead -->
+    <recordLookups>
+        <name>Get_Account_All_Fields</name>
+        <label>Get Account All Fields</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.AccountId</elementReference>
+            </value>
+        </filters>
+        <object>Account</object>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+</Flow>
