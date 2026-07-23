@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <label>TEST VULN - Guest Lookup Screen Flow</label>
+    <processType>Flow</processType>
+    <status>Active</status>
+    <interviewLabel>TEST VULN - Guest Lookup Screen Flow {!$Flow.CurrentDateTime}</interviewLabel>
+
+    <!-- Meant to be added to an Experience Cloud / Site page and exposed to -->
+    <!-- unauthenticated Guest Users. Pair this with a Guest User profile / -->
+    <!-- Guest User Sharing Rule grant on Contact in your sandbox to fully -->
+    <!-- trigger scanner rules around guest access to PII objects. -->
+
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Search_Screen</targetReference>
+        </connector>
+    </start>
+
+    <screens>
+        <name>Search_Screen</name>
+        <label>Search Screen</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Get_Contact_By_Raw_Input</targetReference>
+        </connector>
+        <fields>
+            <name>LastNameInput</name>
+            <fieldType>InputField</fieldType>
+            <dataType>String</dataType>
+            <isRequired>false</isRequired>
+            <fieldText>Enter a last name to search</fieldText>
+            <!-- VULNERABILITY: free-text input with no validation regex, no length -->
+            <!-- limit, and no picklist constraint. It is passed straight into a -->
+            <!-- record filter with no sanitization or escaping downstream. -->
+        </fields>
+    </screens>
+
+    <!-- Second screen grouped here (adjacent to the first) since Flow XML -->
+    <!-- requires elements of the same tag name to be contiguous. Actual -->
+    <!-- execution order is still Search_Screen -> Get_Contact_By_Raw_Input -> -->
+    <!-- Results_Screen, controlled entirely by the <connector> references. -->
+    <screens>
+        <name>Results_Screen</name>
+        <label>Results Screen</label>
+        <locationX>176</locationX>
+        <locationY>374</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>ResultsDisplay</name>
+            <fieldType>DisplayText</fieldType>
+            <fieldText>&lt;p&gt;Results retrieved for: {!LastNameInput}&lt;/p&gt;
+&lt;p&gt;Debug record reference (hardcoded, remove before prod): 003000000000AAABBB&lt;/p&gt;</fieldText>
+        </fields>
+    </screens>
+
+    <!-- VULNERABILITY: unvalidated Screen input used directly as a filter value -->
+    <!-- against a PII-bearing object (Contact), reachable by unauthenticated users -->
+    <recordLookups>
+        <name>Get_Contact_By_Raw_Input</name>
+        <label>Get Contact By Raw Input</label>
+        <locationX>176</locationX>
+        <locationY>266</locationY>
+        <connector>
+            <targetReference>Results_Screen</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>LastName</field>
+            <operator>Contains</operator>
+            <value>
+                <elementReference>LastNameInput</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+
+    <variables>
+        <!-- VULNERABILITY: hardcoded record ID left as a default value -->
+        <name>HardcodedDebugContactId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>003000000000AAABBB</stringValue>
+        </value>
+    </variables>
+</Flow>
