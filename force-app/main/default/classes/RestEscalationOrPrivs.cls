@@ -5,9 +5,9 @@ global without sharing class RestEscalationOrPrivs {
 
 
 
-    
+
     @HttpPost
-    global static boolean updateUserRestPost(String profileName, ID userId){
+    global static boolean updateUserRestPost1(String profileName, ID userId){
         Profile prf = [SELECT Id FROM Profile WHERE Name = :profileName LIMIT 1];
         User usr = [Select ProfileId FROM User Where ID = :userId];
         if(prf.id != NULL){
