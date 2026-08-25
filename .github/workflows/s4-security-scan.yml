@@ -11,5 +11,5 @@ jobs:
       - uses: ./.github/actions/digitsec-security-scan
         with:
           s4-api-token: ${{ secrets.S4_API_TOKEN }}
-          s4-org-id: '<orgId from step 3>'
+          s4-org-id: '6a3ef4c31f9b850994813363'
           s4-base-url: 'https://greeting-easy-developer-printer.trycloudflare.com'
