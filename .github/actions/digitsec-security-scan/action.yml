@@ -1,0 +1,27 @@
+name: 'DigitSec S4 Security Scan'
+description: 'Runs a DigitSec S4 security scan on this pull request and reports pass/fail as a commit status that can block merging.'
+branding:
+  icon: 'shield'
+  color: 'blue'
+inputs:
+  s4-api-token:
+    description: 'Org-scoped DigitSec API token. Generate one from the S4 dashboard (Workspace > API Tokens) and store it as a repo/org secret.'
+    required: true
+  s4-org-id:
+    description: 'The DigitSec workspace (org) id this repo is integrated with. Shown alongside the API token when it is generated.'
+    required: true
+  s4-base-url:
+    description: 'Base URL of the DigitSec S4 API.'
+    required: false
+    default: 'https://app.digitsec.com/'
+  poll-interval-seconds:
+    description: 'How often to poll for scan completion.'
+    required: false
+    default: '15'
+  poll-timeout-minutes:
+    description: 'Maximum time to wait for the scan to complete before failing the job.'
+    required: false
+    default: '30'
+runs:
+  using: 'node20'
+  main: 'index.js'
