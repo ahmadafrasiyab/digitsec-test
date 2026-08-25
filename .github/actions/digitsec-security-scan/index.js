@@ -1,7 +1,10 @@
 const fs = require('fs');
 
 function getInput(name) {
-  const key = 'INPUT_' + name.replace(/-/g, '_').toUpperCase();
+  // GitHub Actions only replaces spaces with underscores when building the
+  // INPUT_* env var name - hyphens are preserved as-is (matching @actions/core's
+  // getInput), so 's4-api-token' becomes INPUT_S4-API-TOKEN, not INPUT_S4_API_TOKEN.
+  const key = 'INPUT_' + name.replace(/ /g, '_').toUpperCase();
   return process.env[key] || '';
 }
 
