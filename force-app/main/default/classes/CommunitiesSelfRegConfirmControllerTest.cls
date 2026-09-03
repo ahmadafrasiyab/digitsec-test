@@ -6,4 +6,5 @@
         // Instantiate a new controller with all parameters in the page
         CommunitiesSelfRegConfirmController controller = new CommunitiesSelfRegConfirmController();
       }    
+      
 }

@@ -13,6 +13,7 @@ global without sharing class AuditAccessControl {
     private static final String VAR = 'permissionsviewallrecords';
     private static final String MAR = 'permissionsmodifyallrecords';
 
+    
     public PageReference init()
     {
         if(Schema.sObjectType.User.isaccessible() &&  Schema.sObjectType.UserRole.isaccessible() && Schema.sObjectType.Profile.isaccessible() && Schema.sObjectType.PermissionSetAssignment.isaccessible())

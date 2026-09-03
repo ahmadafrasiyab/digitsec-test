@@ -23,7 +23,8 @@ public without sharing class escalationOfPrivs {
             return false;
         }
     }
-                           
+              
+    
 
     }
 
