@@ -19,6 +19,7 @@
         <label>Set Contact Field</label>
         <locationX>314</locationX>
         <locationY>611</locationY>
+        
         <assignmentItems>
             <assignToReference>$Record.ContactId</assignToReference>
             <operator>Assign</operator>

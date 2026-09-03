@@ -22,6 +22,7 @@
         <label>Set Rollup Variables</label>
         <locationX>264</locationX>
         <locationY>539</locationY>
+        
         <assignmentItems>
             <assignToReference>SumOfRenewalCost</assignToReference>
             <operator>Add</operator>

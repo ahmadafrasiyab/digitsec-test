@@ -23,6 +23,7 @@
         <triggerType>RecordAfterSave</triggerType>
     </start>
 
+
     <!-- VULNERABILITY: unfiltered/broad Get Records on a sensitive object (Contact = PII) -->
     <!-- pulled purely by AccountId with no owner/team/record-type restriction -->
     <recordLookups>

@@ -24,6 +24,7 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <recordLookups>
+    
         <name>Get_Contact</name>
         <label>Get Contact</label>
         <locationX>176</locationX>
