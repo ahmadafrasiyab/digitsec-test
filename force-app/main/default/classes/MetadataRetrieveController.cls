@@ -28,6 +28,7 @@ public with sharing class MetadataRetrieveController
 	public String fuzzedObjects {get; set;}
 	public String RemoteSiteError {get; set;}	
 
+	
 	public Boolean found = false;
 	
 	public List<sObject> fuzzObjects {get; set;} // new List<sObject> {Case, Account, Asset, Campaign, CaseComment, CollaborationGroup, Contact, Event, Idea, Lead, Opportunity, Pricebook2, Product2, Task};

@@ -17,6 +17,7 @@ public class CommunitiesSelfRegController {
         }    
     }
     
+    
     private boolean isValidPassword() {
         return password == confirmPassword;
     }

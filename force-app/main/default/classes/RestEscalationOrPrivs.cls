@@ -1,6 +1,14 @@
 @RestResource(urlMapping='/user_defined_type_example/*')
 global without sharing class RestEscalationOrPrivs {
 
+
+
+
+
+
+
+
+
     @HttpPost
     global static boolean updateUserRestPost(String profileName, ID userId){
         Profile prf = [SELECT Id FROM Profile WHERE Name = :profileName LIMIT 1];
@@ -15,6 +23,8 @@ global without sharing class RestEscalationOrPrivs {
         }                    
     }
 
+
+    
   
     @HttpGet
     global static boolean updateUserRestGet(){

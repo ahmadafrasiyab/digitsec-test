@@ -11,4 +11,5 @@ global with sharing class CommunitiesLoginController {
     	String displayType = System.currentPageReference().getParameters().get('display');
         return Network.forwardToAuthPage(startUrl, displayType);
     }
+    
 }
