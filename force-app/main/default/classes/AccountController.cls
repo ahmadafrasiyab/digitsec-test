@@ -9,6 +9,12 @@ global with sharing class AccountController {
         return [SELECT Id, Name FROM Account LIMIT 10];
     }
 
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccountList1() {
+        return [SELECT Id, Name FROM Account LIMIT 10];
+    }
+
+
 
 
 
